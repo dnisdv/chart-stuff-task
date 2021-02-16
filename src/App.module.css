@@ -1,0 +1,5 @@
+.Wrapper {
+  text-align: center;
+  display:grid;
+  grid-row-gap: 40px;
+}
