@@ -3,7 +3,6 @@ import { Box } from "@material-ui/core"
 import { Pie } from 'react-chartjs-2';
 import * as api from '../../api/Transaction'
 import styles from './Charts.module.css'
-import { withNamespaces } from 'react-i18next';
 
 const Colors = [
 	'#FF6384',
@@ -18,7 +17,17 @@ const Colors = [
 	"#f55442"
 ]
 
-const Charts = ({t}) => {
+const topTen = (arr, property) => {
+	const top10 =  arr.sort((a,b) => {
+		return b[property] - a[property]
+	}).slice(0, 10)
+	return ({
+		top:top10,
+		others: arr.slice(10)
+	})
+}	
+
+const Charts = () => {
 	const [Transactions, setTransactions] = useState(null)
 
 	useEffect(() => {
@@ -27,46 +36,29 @@ const Charts = ({t}) => {
 		})
 	}, [])
 	if(!Transactions) return <div>Loading...</div>
-
-	const Credit_Amount_Values  = Transactions.reduce((a, i) =>{ 
-		// For not to make over 900 pieces on chart
-		const number = Math.round(i.Credit_Amount / 100000) * 100000
-		if(a.includes(number)){
-			return a
-		}else{
-			return [...a, number]
-		}
-	} , [])
+	
 	const Credit_Amount = {
-		labels: Credit_Amount_Values,
+		labels: topTen(Transactions, "Credit_Amount").top.map((i) => i.Sender),
 		datasets: [{
-			data: Credit_Amount_Values,
+			data: [...topTen(Transactions, "Credit_Amount").top.map((i) => i.Credit_Amount)],
+			backgroundColor: Colors,
+			hoverBackgroundColor: Colors
+		}]
+	};
+		
+	const Debit_Amount = {
+		labels: topTen(Transactions, "Debit_Amount").top.map((i) => i.Sender),
+		datasets: [{
+			data: [...topTen(Transactions, "Debit_Amount").top.map((i) => i.Credit_Amount)],
 			backgroundColor: Colors,
 			hoverBackgroundColor: Colors
 		}]
 	};
 
-
-	const Debit_Amount_Values  = Transactions.reduce((a, i) =>{ 
-		// For not to make over 900 pieces on chart
-		const number = Math.round(i.Debit_Amount / 1000) * 1000
-		if(a.includes(number)){
-			return a
-		}else{
-			return [...a, number]
-		}
-	} , [])
-	const Debit_Amount = {
-		labels: Debit_Amount_Values,
-		datasets: [{
-			data: Debit_Amount_Values,
-			backgroundColor: Colors,
-				hoverBackgroundColor: Colors
-		}]
-	};
+	console.log(topTen(Transactions, "Credit_Amount"))
 
     return(
-        <Box className={styles.Wrapper} dir={t("direction")} >
+        <Box className={styles.Wrapper}>
 			<div style={{width:"500px"}}>
 				<Pie
 					options={{ maintainAspectRatio: false }}
@@ -81,4 +73,4 @@ const Charts = ({t}) => {
     )
 }
 
-export default withNamespaces()(Charts)
+export default Charts

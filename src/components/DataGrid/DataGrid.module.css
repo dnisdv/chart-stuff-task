@@ -2,3 +2,19 @@
     width: 90%;
     margin:0 auto;
 }
+.DateRange{
+    position: absolute;
+    top:100%;
+    right: 0px;
+}
+
+.TableHeadTitle{
+    cursor:pointer;
+}
+.TableHeadIcon{
+    opacity: 0;
+    transition:.4s;
+}
+.TableHeadTitle:hover > .TableHeadIcon {
+    opacity: 0.8;
+}

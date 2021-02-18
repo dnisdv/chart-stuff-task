@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './LanguageChanger.module.css'
-import { Select, NativeSelect } from "@material-ui/core"
+import { NativeSelect } from "@material-ui/core"
 
 const LanguageChanger = ({changeLanguage}) => {
 
@@ -12,7 +12,7 @@ const LanguageChanger = ({changeLanguage}) => {
         <div className={styles.Wrapper}>
             <NativeSelect onChange={selectChange} id="select">
                 <option value="en">English</option>
-                <option value="he">עִבְרִית‎</option>
+                <option style={{textAlign:"right"}} value="he">עִבְרִית‎</option>
             </NativeSelect>
         </div>
     )
